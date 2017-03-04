@@ -20,13 +20,17 @@ dieselclean <- diesel[!is.na(diesel$lat), ]
 fuelclean <- fuel[!is.na(fuel$lat), ]
 oilclean <- oil[!is.na(oil$lat), ]
 
+dieselclean$description <- gsub('\\\v', '', dieselclean$description, perl=T)
+fuelclean$description <- gsub('\\\v', '', fuelclean$description, perl=T)
+oilclean$description <- gsub('\\\v', '', oilclean$description, perl=T)
+
 noaamap <- leaflet() %>% 
   addTiles() %>% 
   addProviderTiles("CartoDB.Positron") %>%
   setView(-95.37, 29.75, zoom = 8) %>% 
-  addCircleMarkers(data = dieselclean, lng = ~ lon, lat = ~ lat, color= ~ "red", radius = ~ sqrt(max_ptl_release_gallons * .002), popup = paste("<strong>",dieselclean$name,"<strong><br/>"), group="Diesel") %>% 
-  addCircleMarkers(data = fuelclean, lng = ~ lon, lat = ~ lat, color= ~ "blue", radius = ~ sqrt(max_ptl_release_gallons * .002), popup = paste("<strong>",fuelclean$name,"<strong><br/>"), group="Fuel") %>% 
-  addCircleMarkers(data = oilclean, lng = ~ lon, lat = ~ lat, color= ~ "green", radius = ~ sqrt(max_ptl_release_gallons * .002), popup = paste("<strong>",oilclean$name,"<strong><br/>"), group="Oil") %>% 
+  addCircles(data = dieselclean, lng = ~ lon, lat = ~ lat, color= ~ "red", radius = ~ sqrt(max_ptl_release_gallons * 4), popup = paste("<div style='max-height:200px; overflow-y:hidden; overflow:auto;'><strong>",dieselclean$name,"</strong><br/>", dieselclean$description,"</div>"), group="Diesel") %>% 
+  addCircles(data = fuelclean, lng = ~ lon, lat = ~ lat, color= ~ "blue", radius = ~ sqrt(max_ptl_release_gallons * 4), popup = paste("<div style='max-height:200px; overflow-y:hidden; overflow:auto;'><strong>",fuelclean$name,"</strong><br/>", fuelclean$description, "</div>"), group="Fuel") %>% 
+  addCircles(data = oilclean, lng = ~ lon, lat = ~ lat, color= ~ "green", radius = ~ sqrt(max_ptl_release_gallons * 4), popup = paste("<div style='max-height:200px; overflow-y:hidden; overflow:auto;'><strong>",oilclean$name,"</strong><br/>", oilclean$description, "</div>"), group="Oil") %>% 
   addLayersControl(overlayGroups = c("Diesel", "Fuel", "Oil"), 
                    options = layersControlOptions(collapsed = FALSE)) 
 noaamap
