@@ -31,6 +31,6 @@ noaamap <- leaflet() %>%
   addCircles(data = dieselclean, lng = ~ lon, lat = ~ lat, color= ~ "red", radius = ~ sqrt(max_ptl_release_gallons * 4), popup = paste("<div style='max-height:200px; overflow-y:hidden; overflow:auto;'><strong>",dieselclean$name,"</strong><br/>", dieselclean$description,"</div>"), group="Diesel") %>% 
   addCircles(data = fuelclean, lng = ~ lon, lat = ~ lat, color= ~ "blue", radius = ~ sqrt(max_ptl_release_gallons * 4), popup = paste("<div style='max-height:200px; overflow-y:hidden; overflow:auto;'><strong>",fuelclean$name,"</strong><br/>", fuelclean$description, "</div>"), group="Fuel") %>% 
   addCircles(data = oilclean, lng = ~ lon, lat = ~ lat, color= ~ "green", radius = ~ sqrt(max_ptl_release_gallons * 4), popup = paste("<div style='max-height:200px; overflow-y:hidden; overflow:auto;'><strong>",oilclean$name,"</strong><br/>", oilclean$description, "</div>"), group="Oil") %>% 
-  addLayersControl(overlayGroups = c("Diesel", "Fuel", "Oil"), 
-                   options = layersControlOptions(collapsed = FALSE)) 
+  addLayersControl(overlayGroups = c("Diesel", "Fuel", "Oil"),options = layersControlOptions(collapsed = FALSE)) %>%
+  addLegend(position = 'topright', colors = c("Red", "Blue", "Green"), labels = c("Diesel","Fuel","Oil"), opacity = .75)
 noaamap
